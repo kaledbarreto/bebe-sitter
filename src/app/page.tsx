@@ -152,7 +152,7 @@ export default function BebeSitterLanding() {
       setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
     }, 6000);
     return () => clearInterval(interval);
-  }, []);
+  }, [testimonials.length]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
@@ -836,7 +836,7 @@ export default function BebeSitterLanding() {
 
                     <div className="mt-6 p-4 bg-gradient-to-r from-pink-50 to-purple-50 rounded-xl">
                       <p className="text-pink-700 font-bold text-center">
-                        💖 "Finalmente posso ter paz de espírito!"
+                        💖 &ldquo;Finalmente posso ter paz de espírito!&rdquo;
                       </p>
                     </div>
                   </div>
@@ -892,7 +892,7 @@ export default function BebeSitterLanding() {
 
                     <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl">
                       <p className="text-blue-700 font-bold text-center">
-                        🚀 "Minha vida profissional decolou!"
+                        🚀 &ldquo;Minha vida profissional decolou!&rdquo;
                       </p>
                     </div>
                   </div>
@@ -969,7 +969,7 @@ export default function BebeSitterLanding() {
                 <Quote className="w-16 h-16 text-pink-400 opacity-50 mx-auto mb-6" />
 
                 <blockquote className="text-2xl md:text-3xl font-medium text-center mb-8 leading-relaxed italic">
-                  "{testimonials[currentTestimonial].text}"
+                  &ldquo;{testimonials[currentTestimonial].text}&rdquo;
                 </blockquote>
 
                 <div className="text-center">
@@ -1038,7 +1038,7 @@ export default function BebeSitterLanding() {
                   </div>
 
                   <p className="text-sm mb-4 line-clamp-3 text-center">
-                    "{testimonial.text.slice(0, 100)}..."
+                    &ldquo;{testimonial.text.slice(0, 100)}...&rdquo;
                   </p>
 
                   <div className="text-center">
