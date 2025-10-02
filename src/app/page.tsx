@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import {
   Star,
   Shield,
@@ -15,6 +16,7 @@ import {
   ChevronRight,
   Quote,
 } from "lucide-react";
+import carlaImage from "../assets/carla.jpeg";
 
 // Componente SVG customizado do WhatsApp
 const WhatsApp = ({ className }: { className?: string }) => (
@@ -57,36 +59,84 @@ export default function BebeSitterLanding() {
 
   const testimonials = [
     {
-      name: "Maria Santos",
-      role: "Mãe de 2 filhos - São Paulo",
-      text: "Finalmente posso sair de casa com total tranquilidade! A babá formada pela Bebê Sitter salvou minha rotina e me devolveu a paz de espírito.",
+      name: "Fernanda",
+      role: "Profissional em Crescimento",
+      text: "Em apenas 2 dias, me senti mais segura do meu valor e já marquei uma conversa com minha chefe para falar sobre o meu crescimento. Obrigada pelo carinho e por um aprendizado que já está fazendo a diferença!",
       rating: 5,
-      highlight: "Mudou minha vida como mãe",
-      results: "Reduziu 90% da minha ansiedade",
+      highlight: "Segurança em 2 dias",
+      results: "Conversa sobre crescimento profissional agendada",
     },
     {
-      name: "Ana Paula Costa",
-      role: "Cuidadora Certificada - Internacional",
-      text: "De desempregada a trabalhar em resort 5 estrelas na Europa! O curso me abriu portas que eu nem sabia que existiam.",
+      name: "Babá Ana",
+      role: "Cuidadora Certificada",
+      text: "Confesso que estava com um friozão na barriga, mas depois do curso estou muito mais confiante e determinada. A experiência foi maravilhosa - tirei todas as minhas dúvidas e foi uma troca incrível. Agradeço à Carla pela paciência, energia acolhedora e por ser essa pessoa fantástica que transforma insegurança em força!",
       rating: 5,
-      highlight: "De R$ 800 para R$ 4.500/mês",
-      results: "Trabalho dos sonhos conquistado",
+      highlight: "De insegura a confiante",
+      results: "Insegurança transformada em força",
     },
     {
-      name: "Hotel Vila Real",
-      role: "Resort de Luxo - Bahia",
-      text: "Contratamos APENAS babás certificadas pela Bebê Sitter. Nossos hóspedes VIP exigem o melhor, e só elas entregam essa qualidade.",
+      name: "Babá Cristina",
+      role: "Cuidadora Especializada",
+      text: "Uma das experiências mais incríveis da minha vida! Na Bebê Sitter, não busco apenas passar confiança aos pais, mas criar um ambiente onde cada criança possa ser verdadeiramente quem é, sem medo de julgamentos. Ser babá vai muito além de um trabalho - é vestir amor, carinho e dedicação, adaptando-se ao mundo mágico dos pequenos e vivendo cada aventura com eles.",
       rating: 5,
-      highlight: "100% de satisfação dos hóspedes",
-      results: "Parceria exclusiva há 3 anos",
+      highlight: "Conexão verdadeira com crianças",
+      results: "Transformação de vida profissional",
     },
     {
-      name: "Juliana Mendes",
-      role: "Executiva - Rio de Janeiro",
-      text: "Minha carreira decolou depois que encontrei uma babá formada pela Carla. Posso viajar a trabalho sem culpa ou preocupação.",
+      name: "Sitter Tainara",
+      role: "Cuidadora Certificada",
+      text: "O curso foi muito além do que eu esperava! Achei que só aprenderia cuidados básicos, mas saí totalmente segura para lidar com QUALQUER situação. A didática é maravilhosa e o melhor: comprei um curso de babá e ganhei um de psicologia infantil de brinde! Uma experiência completa que entregou muito mais do que prometeu!",
       rating: 5,
-      highlight: "Carreira e maternidade em equilíbrio",
-      results: "Promoção conquistada em 6 meses",
+      highlight: "Superou todas as expectativas",
+      results: "Segurança total para qualquer situação",
+    },
+    {
+      name: "Aluna do Curso Bebê Sitter",
+      role: "Cuidadora Experiente",
+      text: "Eu achava que já sabia tudo sobre cuidar de crianças, mas o curso agregou muito ao meu conhecimento. Amei aprender sobre nutrição, estimulação infantil e primeiros socorros - coisas que nem imaginava que eram tão necessárias. Agora me sinto de fato preparada e confiante para trabalhar.",
+      rating: 5,
+      highlight: "Conhecimento transformador",
+      results: "Preparação e confiança total",
+    },
+    {
+      name: "Camila",
+      role: "Babá na Suíça - Zurique",
+      text: "Trabalho em Zurique e as famílias daqui são extremamente exigentes. O curso da Bebê Sitter me deu a base técnica que faltava - principalmente sobre estimulação infantil e protocolos de segurança - que foram decisivos na minha contratação. Agradeço por me equipar para um mercado que valoriza a qualificação real.",
+      rating: 5,
+      highlight: "Validado no rigor suíço",
+      results: "Contratação internacional conquistada",
+    },
+    {
+      name: "Letícia",
+      role: "Babá em Londres - Inglaterra",
+      text: "Mesmo com experiência, sentia que precisava de mais embasamento para trabalhar em Londres. O curso superou expectativas: a parte de psicologia infantil e nutrição foram diferenciais no meu processo seletivo com uma família britânica. Hoje me sinto segura para atuar em qualquer cenário.",
+      rating: 5,
+      highlight: "Reconhecimento no Reino Unido",
+      results: "Aprovada em processo seletivo britânico",
+    },
+    {
+      name: "Ana",
+      role: "Babá na Alemanha - Berlim",
+      text: "Trabalhar em Berlim exige precisão e conhecimento comprovado. Os módulos de primeiros socorros e desenvolvimento infantil do curso foram exatamente o que precisei para comprovar minha qualificação. O método é completo e me deu confiança até para explicar minha abordagem em entrevistas.",
+      rating: 5,
+      highlight: "Padrões alemães atendidos",
+      results: "Qualificação comprovada internacionalmente",
+    },
+    {
+      name: "Fernanda",
+      role: "Babá nos EUA - Miami",
+      text: "Mudei para Miami e precisei me adaptar a uma nova cultura de cuidados. O curso não só me ensinou técnicas universais, como também me mostrou como comunicar minha metodologia com clareza - o que fez toda diferença na minha contratação por uma família americana.",
+      rating: 5,
+      highlight: "Destaque no mercado americano",
+      results: "Contratação por família americana",
+    },
+    {
+      name: "Renata",
+      role: "Babá no Canadá - Toronto",
+      text: "Em Toronto, a qualificação é levada muito a sério. O curso me surpreendeu pela abordagem prática e psicológica - itens essenciais que as agências daqui valorizam. Consegui minha certificação local com muito mais facilidade graças à base sólida que adquiri.",
+      rating: 5,
+      highlight: "Certificação que abre portas",
+      results: "Certificação local conquistada facilmente",
     },
   ];
 
@@ -617,31 +667,16 @@ export default function BebeSitterLanding() {
                   </div>
                 </div>
 
-                <div className="w-full h-80 bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100 rounded-2xl mb-6 flex items-center justify-center relative overflow-hidden">
-                  {/* Elementos animados de fundo */}
-                  <div className="absolute inset-0">
-                    {Array.from({ length: 6 }).map((_, i) => (
-                      <div
-                        key={`photo-bg-${i}`}
-                        className="absolute w-8 h-8 bg-gradient-to-r from-pink-200/50 to-blue-200/50 rounded-full blur-sm"
-                        style={{
-                          left: `${20 + i * 15}%`,
-                          top: `${15 + i * 12}%`,
-                          animationDelay: `${i * 0.4}s`,
-                        }}
-                      />
-                    ))}
-                  </div>
-
-                  <div className="relative text-center z-10">
-                    <div className="p-6 bg-gradient-to-r from-pink-400 to-purple-500 rounded-full mb-4">
-                      <Baby className="w-24 h-24 text-white" />
-                    </div>
-                    <p className="text-gray-600 font-bold text-lg">
-                      Carla Mujaes
-                    </p>
-                    <p className="text-gray-500">Especialista Líder</p>
-                  </div>
+                <div className="w-full h-140 bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100 rounded-2xl mb-6 flex items-center justify-center relative overflow-hidden">
+                  <Image
+                    src={carlaImage}
+                    alt="Carla Mujaes - Especialista em Cuidados Infantis"
+                    fill
+                    className="object-cover object-[center_15%] rounded-2xl"
+                    priority
+                  />
+                  {/* Overlay sutil para melhor legibilidade */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl"></div>
                 </div>
 
                 <div className="text-center">
@@ -666,6 +701,266 @@ export default function BebeSitterLanding() {
                       )
                     )}
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Biografia Detalhada da Carla */}
+      <section className="py-24 bg-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-pink-50/50 to-purple-50/50"></div>
+
+        {/* Elementos decorativos sutis */}
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div
+            key={`bio-element-${i}`}
+            className="absolute w-3 h-3 bg-gradient-to-r from-pink-300/20 to-purple-300/20 rounded-full blur-sm"
+            style={{
+              left: `${15 + i * 15}%`,
+              top: `${20 + i * 12}%`,
+              animation: `float ${4 + i * 0.3}s ease-in-out infinite`,
+              animationDelay: `${i * 0.5}s`,
+            }}
+          />
+        ))}
+
+        <div className="relative max-w-5xl mx-auto px-4">
+          {/* Header da biografia */}
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-3 rounded-full mb-6 font-bold shadow-lg hover:scale-105 transition-transform duration-300">
+              <Heart className="w-5 h-5" />
+              MINHA HISTÓRIA
+              <Heart className="w-5 h-5" />
+            </div>
+
+            <h2 className="text-3xl md:text-5xl font-black text-gray-800 mb-4 hover:scale-105 transition-transform duration-300">
+              Ei, sou a{" "}
+              <span className="bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
+                Carla Mujaes
+              </span>{" "}
+              🧡
+            </h2>
+          </div>
+
+          {/* Conteúdo da biografia */}
+          <div className="space-y-8">
+            {/* Introdução */}
+            <div className="group relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-pink-100 to-purple-100 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-50"></div>
+              <div className="relative bg-white p-8 md:p-10 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 border-2 border-pink-100">
+                <p className="text-lg md:text-xl text-gray-700 leading-relaxed">
+                  Há mais de <strong className="text-pink-600">14 anos</strong>,
+                  minha vida é dedicada a um propósito: garantir que as crianças
+                  recebam o cuidado mais{" "}
+                  <strong className="text-purple-600">
+                    profissional, ético e cheio de amor
+                  </strong>{" "}
+                  que merecem.
+                </p>
+              </div>
+            </div>
+
+            {/* A origem */}
+            <div className="group relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-orange-100 to-pink-100 rounded-2xl transform -rotate-1 group-hover:-rotate-2 transition-transform duration-300 opacity-50"></div>
+              <div className="relative bg-white p-8 md:p-10 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 border-2 border-orange-100">
+                <div className="flex items-start gap-4 mb-4">
+                  <div className="p-3 bg-gradient-to-r from-orange-400 to-pink-400 rounded-full flex-shrink-0">
+                    <Baby className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-800 mt-2">
+                    Como Tudo Começou
+                  </h3>
+                </div>
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  Tudo começou de forma simples, cuidando dos meus próprios
+                  primos e sobrinhos. Foi aí que percebi um drama que se repetia
+                  em muitas famílias:
+                  <strong className="text-orange-600">
+                    {" "}
+                    a angústia e a dificuldade de encontrar uma profissional
+                    verdadeiramente preparada
+                  </strong>{" "}
+                  para confiar o que têm de mais precioso: seus filhos.
+                </p>
+              </div>
+            </div>
+
+            {/* O propósito */}
+            <div className="group relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-100 to-blue-100 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-50"></div>
+              <div className="relative bg-white p-8 md:p-10 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 border-2 border-purple-100">
+                <div className="flex items-start gap-4 mb-4">
+                  <div className="p-3 bg-gradient-to-r from-purple-400 to-blue-400 rounded-full flex-shrink-0">
+                    <Heart className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-800 mt-2">
+                    O Que Me Moveu
+                  </h3>
+                </div>
+                <p className="text-lg text-gray-700 leading-relaxed mb-4">
+                  Essa dor real me moveu. Não era só sobre &ldquo;encontrar
+                  alguém&rdquo;, era sobre{" "}
+                  <strong className="text-purple-600">
+                    formar alguém de confiança
+                  </strong>
+                  .
+                </p>
+                <div className="bg-gradient-to-r from-purple-50 to-blue-50 p-6 rounded-xl">
+                  <p className="text-lg font-bold text-gray-800 text-center">
+                    Foi assim que nasceu a{" "}
+                    <span className="text-purple-600">Bebê Sitter</span>, muito
+                    mais do que um curso, um{" "}
+                    <span className="text-blue-600">
+                      movimento pela profissionalização do cuidado infantil
+                    </span>
+                    .
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* A solução */}
+            <div className="group relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-green-100 to-blue-100 rounded-2xl transform -rotate-1 group-hover:-rotate-2 transition-transform duration-300 opacity-50"></div>
+              <div className="relative bg-white p-8 md:p-10 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 border-2 border-green-100">
+                <div className="flex items-start gap-4 mb-6">
+                  <div className="p-3 bg-gradient-to-r from-green-400 to-blue-400 rounded-full flex-shrink-0">
+                    <Award className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-800 mt-2">
+                    Da Minha Experiência, Nasceu a Solução para a Sua Busca
+                  </h3>
+                </div>
+
+                <p className="text-lg text-gray-700 leading-relaxed mb-6">
+                  Desenvolvi pessoalmente um método completo de capacitação que
+                  vai muito além do básico. Nossas cuidadoras são formadas em:
+                </p>
+
+                <div className="space-y-4">
+                  {[
+                    {
+                      title: "Ética e Segurança",
+                      description: "Os pilares absolutos do cuidado",
+                      icon: Shield,
+                      color: "from-red-400 to-red-500",
+                    },
+                    {
+                      title: "Comportamento e Desenvolvimento Infantil",
+                      description: "Para entender a criança em cada fase",
+                      icon: Baby,
+                      color: "from-blue-400 to-blue-500",
+                    },
+                    {
+                      title: "Estimulação Adequada",
+                      description:
+                        "Para promover um desenvolvimento feliz e saudável",
+                      icon: Star,
+                      color: "from-yellow-400 to-yellow-500",
+                    },
+                    {
+                      title: "Primeiros Socorros e Prevenção de Acidentes",
+                      description:
+                        "Para você respirar aliviada sabendo que sua criança está em boas mãos",
+                      icon: Heart,
+                      color: "from-green-400 to-green-500",
+                    },
+                  ].map((item, index) => (
+                    <div
+                      key={index}
+                      className="flex items-start gap-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-300 group/item"
+                    >
+                      <div
+                        className={`p-2 bg-gradient-to-r ${item.color} rounded-full flex-shrink-0 group-hover/item:scale-110 transition-transform duration-300`}
+                      >
+                        <item.icon className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-gray-800 mb-1">
+                          {item.title}
+                        </h4>
+                        <p className="text-gray-600 text-sm">
+                          {item.description}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Missão */}
+            <div className="group relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-pink-200 to-purple-200 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300 opacity-70"></div>
+              <div className="relative bg-gradient-to-r from-pink-600 to-purple-600 p-8 md:p-10 rounded-2xl shadow-2xl text-white">
+                <div className="text-center">
+                  <Heart className="w-12 h-12 mx-auto mb-4 text-yellow-300" />
+                  <h3 className="text-2xl md:text-3xl font-black mb-4">
+                    Minha Missão é Clara
+                  </h3>
+                  <p className="text-xl leading-relaxed">
+                    Unir <strong className="text-yellow-300">amor</strong> e{" "}
+                    <strong className="text-yellow-300">
+                      responsabilidade técnica
+                    </strong>
+                    , transformando cuidadoras em{" "}
+                    <strong className="text-yellow-300">
+                      referências de confiança
+                    </strong>{" "}
+                    para a família.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Hoje */}
+            <div className="group relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-2xl transform -rotate-1 group-hover:-rotate-2 transition-transform duration-300 opacity-50"></div>
+              <div className="relative bg-white p-8 md:p-10 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 border-2 border-blue-100">
+                <p className="text-lg text-gray-700 leading-relaxed mb-4">
+                  Hoje, a <strong className="text-blue-600">Bebê Sitter</strong>{" "}
+                  é a ponte segura entre a sua necessidade por cuidado
+                  excepcional e as profissionais mais bem preparadas do mercado.
+                  É a{" "}
+                  <strong className="text-purple-600">
+                    rede de apoio que faltava
+                  </strong>{" "}
+                  para quem cuida e, principalmente, para quem confia.
+                </p>
+
+                <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-xl border-l-4 border-blue-500">
+                  <p className="text-lg font-bold text-gray-800 italic">
+                    &ldquo;Se você busca mais do que uma babá, se busca uma
+                    parceira de confiança para o desenvolvimento do seu filho...
+                    <span className="text-blue-600">
+                      {" "}
+                      Você está no lugar certo.
+                    </span>
+                    &rdquo;
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Encerramento */}
+            <div className="text-center">
+              <div className="inline-block bg-gradient-to-r from-pink-100 to-purple-100 p-8 rounded-2xl">
+                <p className="text-xl text-gray-700 leading-relaxed">
+                  Com <strong className="text-pink-600">dedicação</strong> e{" "}
+                  <strong className="text-purple-600">leveza</strong>, sigo
+                  transformando o cuidado infantil em uma prática mais{" "}
+                  <strong className="text-blue-600">
+                    humana, consciente e profissional
+                  </strong>
+                  .
+                </p>
+                <div className="mt-6">
+                  <p className="text-2xl font-black text-gray-800">
+                    — Carla Mujaes 🧡
+                  </p>
                 </div>
               </div>
             </div>
