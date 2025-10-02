@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
-import carlaImage from "../assets/carla.jpeg";
+import carlaImage from "../assets/carla.jpg";
 
 // Componente SVG customizado do WhatsApp
 const WhatsApp = ({ className }: { className?: string }) => (
