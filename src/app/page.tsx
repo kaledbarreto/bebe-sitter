@@ -1,21 +1,22 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Image from "next/image";
 import {
-  Star,
-  Shield,
-  Heart,
-  Users,
-  CheckCircle,
   ArrowRight,
-  Baby,
   Award,
-  Globe,
+  Baby,
+  CheckCircle,
   ChevronLeft,
   ChevronRight,
+  Globe,
+  Heart,
+  Mail,
   Quote,
+  Shield,
+  Star,
+  Users,
 } from "lucide-react";
+import Image from "next/image";
+import { useState, useRef, useEffect } from "react";
 import carlaImage from "../assets/carla.jpeg";
 
 // Componente SVG customizado do WhatsApp
@@ -31,6 +32,79 @@ const WhatsApp = ({ className }: { className?: string }) => (
 );
 
 export default function BebeSitterLanding() {
+  // Formulário funcional e validação
+  interface FormType {
+    nome: string;
+    email: string;
+    telefone: string;
+    consent: boolean;
+  }
+  interface ErrorsType {
+    nome?: string;
+    email?: string;
+    telefone?: string;
+    consent?: string;
+  }
+
+  // Substituir o estado do formulário por refs
+  const nomeRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const telefoneRef = useRef<HTMLInputElement>(null);
+  const consentRef = useRef<HTMLInputElement>(null);
+  const [errors, setErrors] = useState<ErrorsType>({});
+  const [submitting, setSubmitting] = useState(false);
+
+  function validateUncontrolled({
+    nome,
+    email,
+    telefone,
+    consent,
+  }: {
+    nome: string;
+    email: string;
+    telefone: string;
+    consent: boolean;
+  }): ErrorsType {
+    const errors: ErrorsType = {};
+    if (!nome.trim()) {
+      errors.nome = "Nome é obrigatório.";
+    }
+    if (!email.trim()) {
+      errors.email = "E-mail é obrigatório.";
+    } else if (!/^\S+@\S+\.\S+$/.test(email)) {
+      errors.email = "E-mail inválido.";
+    }
+    // Valida telefone removendo a máscara
+    const telefoneNumeros = telefone.replace(/\D/g, "");
+    if (telefone && !/^\d{10,11}$/.test(telefoneNumeros)) {
+      errors.telefone =
+        "Telefone deve conter apenas números (10 ou 11 dígitos).";
+    }
+    if (!consent) {
+      errors.consent = "É necessário aceitar o consentimento.";
+    }
+    return errors;
+  }
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const nome = nomeRef.current?.value || "";
+    const email = emailRef.current?.value || "";
+    const telefone = (telefoneRef.current?.value || "").replace(/\D/g, "");
+    const consent = consentRef.current?.checked || false;
+    const val = validateUncontrolled({ nome, email, telefone, consent });
+    setErrors(val);
+    if (Object.keys(val).length === 0) {
+      setSubmitting(true);
+      setTimeout(() => {
+        // Simula envio
+        console.log("Formulário enviado:", { nome, email, telefone, consent });
+        setSubmitting(false);
+        alert("Dados enviados! Veja o console.");
+      }, 800);
+    }
+  }
+
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   type FloatingElement = {
@@ -204,6 +278,23 @@ export default function BebeSitterLanding() {
     return () => clearInterval(interval);
   }, [testimonials.length]);
 
+  function maskPhone(value: string) {
+    value = value.replace(/\D/g, "");
+    if (value.length > 11) value = value.slice(0, 11);
+    if (value.length > 10) {
+      return value.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+    } else if (value.length > 5) {
+      return value.replace(/(\d{2})(\d{4})(\d{0,4})/, "($1) $2-$3");
+    } else if (value.length > 2) {
+      return value.replace(/(\d{2})(\d{0,5})/, "($1) $2");
+    } else {
+      return value.replace(/(\d{0,2})/, "($1");
+    }
+  }
+
+  // No topo do componente (exato local após hooks, antes do return):
+  const CTA_LINK = "https://www.google.com";
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       {/* Hero Section */}
@@ -301,7 +392,12 @@ export default function BebeSitterLanding() {
                   : "translate-y-10 opacity-0"
               }`}
             >
-              <button className="group relative inline-flex items-center gap-4 bg-gradient-to-r from-yellow-400 via-orange-400 to-yellow-400 bg-size-200 bg-pos-0 hover:bg-pos-100 text-gray-900 px-10 py-6 rounded-full font-bold text-xl transition-all duration-500 hover:scale-110 shadow-2xl hover:shadow-yellow-400/50 cursor-pointer">
+              <a
+                href={CTA_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative inline-flex items-center gap-4 bg-gradient-to-r from-yellow-400 via-orange-400 to-yellow-400 bg-size-200 bg-pos-0 hover:bg-pos-100 text-gray-900 px-10 py-6 rounded-full font-bold text-xl transition-all duration-500 hover:scale-110 shadow-2xl hover:shadow-yellow-400/50 cursor-pointer"
+              >
                 <div className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-orange-300 rounded-full blur opacity-75 group-hover:opacity-100 transition-opacity"></div>
                 <WhatsApp className="relative w-8 h-8" />
                 <span className="relative">
@@ -315,7 +411,7 @@ export default function BebeSitterLanding() {
                   className="absolute inset-0 rounded-full border-2 border-orange-300 animate-ping opacity-50"
                   style={{ animationDelay: "0.5s" }}
                 ></div> */}
-              </button>
+              </a>
 
               <p className="mt-6 text-yellow-200 text-lg">
                 ✨ <span className="font-bold">ATENÇÃO:</span> Vagas limitadas •
@@ -1406,9 +1502,14 @@ export default function BebeSitterLanding() {
               <p className="text-white/90 text-xl mb-6">
                 Junte-se às milhares de pessoas que já transformaram suas vidas
               </p>
-              <button className="bg-white text-gray-900 px-8 py-4 rounded-full font-bold text-lg hover:scale-105 transition-all duration-300 shadow-xl cursor-pointer">
+              <a
+                href={CTA_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white text-gray-900 px-8 py-4 rounded-full font-bold text-lg hover:scale-105 transition-all duration-300 shadow-xl cursor-pointer"
+              >
                 QUERO MINHA TRANSFORMAÇÃO AGORA!
-              </button>
+              </a>
             </div>
           </div>
         </div>
@@ -1434,7 +1535,7 @@ export default function BebeSitterLanding() {
 
         {/* Ondas de fundo */}
         <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-gradient-to-br from-yellow-400/20 to-orange-400/20 rounded-full blur-3xl hover:opacity-40 transition-opacity duration-500"></div>
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-yellow-400/20 to-orange-400/20 rounded-full blur-3xl hover:opacity-40 transition-opacity duration-500"></div>
           <div className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-gradient-to-br from-pink-400/20 to-purple-400/20 rounded-full blur-3xl hover:opacity-40 transition-opacity duration-500"></div>
         </div>
 
@@ -1467,45 +1568,81 @@ export default function BebeSitterLanding() {
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-white/5 rounded-3xl blur-lg hover:blur-xl transition-all duration-300"></div>
             <div className="relative bg-white/10 p-8 md:p-12 rounded-3xl backdrop-blur-sm border border-white/20 hover:bg-white/15 transition-all duration-300">
-              <form className="space-y-8">
+              <form
+                className="space-y-8"
+                onSubmit={handleSubmit}
+                autoComplete="off"
+              >
                 {/* Campo Nome */}
                 <div className="relative">
-                  <label className="block text-lg font-bold text-white mb-3 group-hover:text-yellow-200 transition-colors duration-300">
-                    👤 Seu Nome Completo *
+                  <label className="flex text-lg font-bold text-white mb-3 group-hover:text-yellow-200 transition-colors duration-300 items-center gap-2">
+                    <Mail className="w-5 h-5 text-yellow-300" /> Seu Nome
+                    Completo *
                   </label>
                   <input
                     type="text"
                     required
                     placeholder="Digite seu nome completo aqui"
-                    className="w-full px-6 py-4 bg-white/20 border-2 border-white/30 rounded-2xl text-white placeholder-white/60 text-lg backdrop-blur-sm focus:border-yellow-400 focus:bg-white/30 focus:outline-none focus:ring-4 focus:ring-yellow-400/30 hover:border-white/50 hover:bg-white/25 transition-all duration-300"
+                    className={`w-full px-6 py-4 bg-white/20 border-2 border-white/30 rounded-2xl text-white placeholder-white/60 text-lg backdrop-blur-sm focus:border-yellow-400 focus:bg-white/30 focus:outline-none focus:ring-4 focus:ring-yellow-400/30 hover:border-white/50 hover:bg-white/25 transition-all duration-300 ${
+                      errors.nome ? "border-red-400" : ""
+                    }`}
+                    ref={nomeRef}
                   />
+                  {errors.nome && (
+                    <span className="text-red-300 text-sm mt-1 block">
+                      {errors.nome}
+                    </span>
+                  )}
                   <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/10 to-orange-400/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                 </div>
 
                 {/* Campo Email */}
                 <div className="relative">
-                  <label className="block text-lg font-bold text-white mb-3 group-hover:text-yellow-200 transition-colors duration-300">
-                    📧 Seu Melhor E-mail *
+                  <label className="flex text-lg font-bold text-white mb-3 group-hover:text-yellow-200 transition-colors duration-300 items-center gap-2">
+                    <Mail className="w-5 h-5 text-yellow-300" /> Seu Melhor
+                    E-mail *
                   </label>
                   <input
                     type="email"
                     required
                     placeholder="exemplo@email.com"
-                    className="w-full px-6 py-4 bg-white/20 border-2 border-white/30 rounded-2xl text-white placeholder-white/60 text-lg backdrop-blur-sm focus:border-yellow-400 focus:bg-white/30 focus:outline-none focus:ring-4 focus:ring-yellow-400/30 hover:border-white/50 hover:bg-white/25 transition-all duration-300"
+                    className={`w-full px-6 py-4 bg-white/20 border-2 border-white/30 rounded-2xl text-white placeholder-white/60 text-lg backdrop-blur-sm focus:border-yellow-400 focus:bg-white/30 focus:outline-none focus:ring-4 focus:ring-yellow-400/30 hover:border-white/50 hover:bg-white/25 transition-all duration-300 ${
+                      errors.email ? "border-red-400" : ""
+                    }`}
+                    ref={emailRef}
                   />
+                  {errors.email && (
+                    <span className="text-red-300 text-sm mt-1 block">
+                      {errors.email}
+                    </span>
+                  )}
                   <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/10 to-orange-400/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                 </div>
 
                 {/* Campo WhatsApp (opcional) */}
                 <div className="relative">
-                  <label className="block text-lg font-bold text-white mb-3 group-hover:text-yellow-200 transition-colors duration-300">
-                    📱 WhatsApp (opcional)
+                  <label className="flex text-lg font-bold text-white mb-3 group-hover:text-yellow-200 transition-colors duration-300 items-center gap-2">
+                    <WhatsApp className="w-5 h-5 text-green-400" /> WhatsApp
+                    (opcional)
                   </label>
                   <input
                     type="tel"
+                    inputMode="numeric"
                     placeholder="(11) 99999-9999"
-                    className="w-full px-6 py-4 bg-white/20 border-2 border-white/30 rounded-2xl text-white placeholder-white/60 text-lg backdrop-blur-sm focus:border-yellow-400 focus:bg-white/30 focus:outline-none focus:ring-4 focus:ring-yellow-400/30 hover:border-white/50 hover:bg-white/25 transition-all duration-300"
+                    className={`w-full px-6 py-4 bg-white/20 border-2 border-white/30 rounded-2xl text-white placeholder-white/60 text-lg backdrop-blur-sm focus:border-yellow-400 focus:bg-white/30 focus:outline-none focus:ring-4 focus:ring-yellow-400/30 hover:border-white/50 hover:bg-white/25 transition-all duration-300 ${
+                      errors.telefone ? "border-red-400" : ""
+                    }`}
+                    ref={telefoneRef}
+                    onInput={(e) => {
+                      const input = e.target as HTMLInputElement;
+                      input.value = maskPhone(input.value);
+                    }}
                   />
+                  {errors.telefone && (
+                    <span className="text-red-300 text-sm mt-1 block">
+                      {errors.telefone}
+                    </span>
+                  )}
                   <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/10 to-orange-400/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                 </div>
 
@@ -1515,6 +1652,7 @@ export default function BebeSitterLanding() {
                     type="checkbox"
                     id="consent"
                     required
+                    ref={consentRef}
                     className="mt-1 w-5 h-5 rounded border-2 border-white/30 bg-white/20 text-yellow-400 focus:ring-yellow-400 focus:ring-2 hover:border-white/50 transition-colors duration-300"
                   />
                   <label
@@ -1532,12 +1670,15 @@ export default function BebeSitterLanding() {
                   <button
                     type="submit"
                     className="group relative inline-flex items-center gap-4 bg-gradient-to-r from-yellow-400 via-orange-400 to-yellow-400 bg-size-200 bg-pos-0 hover:bg-pos-100 text-gray-900 px-10 py-6 rounded-full font-black text-xl transition-all duration-500 hover:scale-110 shadow-2xl hover:shadow-yellow-400/50 cursor-pointer"
+                    disabled={submitting}
                   >
                     <div className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-orange-300 rounded-full blur opacity-75 group-hover:opacity-100 transition-opacity duration-300"></div>
 
                     <Baby className="relative w-8 h-8 group-hover:scale-110 transition-transform duration-300" />
                     <span className="relative">
-                      QUERO RECEBER AS INFORMAÇÕES
+                      {submitting
+                        ? "ENVIANDO..."
+                        : "QUERO RECEBER AS INFORMAÇÕES"}
                     </span>
                     <ArrowRight className="relative w-8 h-8 group-hover:translate-x-2 transition-transform duration-300" />
                   </button>
@@ -1548,7 +1689,6 @@ export default function BebeSitterLanding() {
                   </p>
                 </div>
               </form>
-
               {/* Informações de contato alternativas */}
               <div className="mt-12 pt-8 border-t border-white/20">
                 <div className="text-center">
@@ -1559,22 +1699,25 @@ export default function BebeSitterLanding() {
                   <div className="flex justify-center flex-wrap gap-6">
                     {[
                       {
-                        icon: "📧",
+                        icon: (
+                          <Mail className="w-5 h-5 text-yellow-300 inline" />
+                        ),
                         text: "contato@bebesitter.com.br",
                         type: "email",
                       },
-                      { icon: "📱", text: "(11) 99999-9999", type: "phone" },
                       {
-                        icon: "🌐",
-                        text: "www.bebesitter.com.br",
-                        type: "website",
+                        icon: (
+                          <WhatsApp className="w-5 h-5 text-green-500 inline" />
+                        ),
+                        text: "(11) 99999-9999",
+                        type: "phone",
                       },
                     ].map((contact, index) => (
                       <div key={index} className="group relative">
                         <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/20 to-orange-400/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm"></div>
                         <div className="relative bg-white/10 px-6 py-3 rounded-2xl backdrop-blur-sm border border-white/20 hover:scale-105 hover:bg-white/20 transition-all duration-300 cursor-pointer">
                           <div className="flex items-center gap-3">
-                            <span className="text-2xl group-hover:scale-110 transition-transform duration-300">
+                            <span className="flex items-center text-2xl group-hover:scale-110 transition-transform duration-300">
                               {contact.icon}
                             </span>
                             <span className="text-white font-medium hover:text-yellow-200 transition-colors duration-300">
@@ -1684,18 +1827,15 @@ export default function BebeSitterLanding() {
                 SUA VEZ
               </span>
               <br />
-              <span
-                className="inline-block text-pink-300"
-                style={{ animationDelay: "1s" }}
-              >
+              <span className="inline-block text-pink-300">
                 de dar o próximo passo!
               </span>
             </h2>
 
             {/* Subtítulo com destaque */}
             <div className="relative max-w-4xl mx-auto mb-12">
-              <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-white/5 rounded-3xl blur-lg"></div>
-              <p className="relative text-xl md:text-2xl leading-relaxed bg-white/10 p-8 rounded-3xl backdrop-blur-sm border border-white/20">
+              <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-white/5 rounded-2xl blur-lg"></div>
+              <p className="relative text-xl md:text-2xl leading-relaxed bg-white/10 p-8 rounded-2xl backdrop-blur-sm border border-white/20">
                 Entre para o grupo exclusivo com a especialista{" "}
                 <span className="bg-yellow-300 text-gray-900 px-3 py-1 rounded-full font-black">
                   Carla Mujaes
@@ -1723,7 +1863,12 @@ export default function BebeSitterLanding() {
                 style={{ animationDelay: "0.5s" }}
               ></div>
 
-              <button className="group relative inline-flex items-center gap-6 bg-gradient-to-r from-yellow-400 via-orange-400 to-yellow-400 bg-size-200 bg-pos-0 hover:bg-pos-100 text-gray-900 px-12 py-8 rounded-full font-black text-2xl md:text-3xl transition-all duration-500 hover:scale-110 shadow-2xl hover:shadow-yellow-400/50 cursor-pointer">
+              <a
+                href={CTA_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative inline-flex items-center gap-6 bg-gradient-to-r from-yellow-400 via-orange-400 to-yellow-400 bg-size-200 bg-pos-0 hover:bg-pos-100 text-gray-900 px-12 py-8 rounded-full font-black text-2xl md:text-3xl transition-all duration-500 hover:scale-110 shadow-2xl hover:shadow-yellow-400/50 cursor-pointer"
+              >
                 {/* Ícone com animação própria */}
                 <WhatsApp className="relative w-10 h-10 group-hover:text-green-800 transition-colors" />
 
@@ -1738,16 +1883,16 @@ export default function BebeSitterLanding() {
                 <ArrowRight className="relative w-10 h-10 group-hover:translate-x-4 transition-transform" />
 
                 {/* Efeitos de borda animados */}
-                {/* <div className="absolute inset-0 rounded-full border-4 border-yellow-300 animate-ping opacity-75"></div>
+                {/* <div className="absolute inset-0 rounded-full border-2 border-yellow-300 animate-ping opacity-75"></div>
                 <div
-                  className="absolute inset-0 rounded-full border-4 border-orange-300 animate-ping opacity-50"
+                  className="absolute inset-0 rounded-full border-2 border-orange-300 animate-ping opacity-50"
                   style={{ animationDelay: "0.3s" }}
                 ></div>
                 <div
-                  className="absolute inset-0 rounded-full border-4 border-pink-300 animate-ping opacity-25"
+                  className="absolute inset-0 rounded-full border-2 border-pink-300 animate-ping opacity-25"
                   style={{ animationDelay: "0.6s" }}
                 ></div> */}
-              </button>
+              </a>
             </div>
           </div>
 
@@ -1761,16 +1906,6 @@ export default function BebeSitterLanding() {
 
             <div className="flex justify-center flex-wrap gap-6">
               {[
-                {
-                  icon: "🔥",
-                  text: "Vagas Limitadas",
-                  color: "from-red-400 to-orange-400",
-                },
-                {
-                  icon: "💎",
-                  text: "100% Gratuito",
-                  color: "from-green-400 to-blue-400",
-                },
                 {
                   icon: "⚡",
                   text: "Transformação Garantida",
@@ -1883,11 +2018,6 @@ export default function BebeSitterLanding() {
             <div className="flex justify-center flex-wrap gap-4 mb-12">
               {[
                 {
-                  icon: Award,
-                  text: "15+ Anos",
-                  gradient: "from-yellow-400 to-orange-500",
-                },
-                {
                   icon: Users,
                   text: "7k+ Formadas",
                   gradient: "from-green-400 to-blue-500",
@@ -1951,16 +2081,6 @@ export default function BebeSitterLanding() {
               <div className="space-y-4">
                 {[
                   {
-                    label: "Cuidadoras Formadas",
-                    value: "7.000+",
-                    color: "text-green-400",
-                  },
-                  {
-                    label: "Anos de Experiência",
-                    value: "15+",
-                    color: "text-yellow-400",
-                  },
-                  {
                     label: "Países Atendidos",
                     value: "50+",
                     color: "text-blue-400",
@@ -2000,10 +2120,15 @@ export default function BebeSitterLanding() {
                   <p className="text-yellow-300 font-bold mb-4">
                     Pronta para transformar sua vida?
                   </p>
-                  <button className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 text-sm py-3 px-6 rounded-full font-bold hover:scale-105 transition-all duration-300 shadow-xl cursor-pointer flex items-center justify-center gap-3">
+                  <a
+                    href={CTA_LINK}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 text-sm py-3 px-6 rounded-full font-bold hover:scale-105 transition-all duration-300 shadow-xl cursor-pointer flex items-center justify-center gap-3"
+                  >
                     <WhatsApp className="w-6 h-6" />
                     ENTRAR NO GRUPO AGORA
-                  </button>
+                  </a>
                 </div>
 
                 <div className="text-sm text-gray-400">
