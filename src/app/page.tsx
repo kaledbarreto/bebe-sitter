@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
+import emailjs from "@emailjs/browser";
 import carlaImage from "../assets/carla.jpg";
 
 // Componente SVG customizado do WhatsApp
@@ -33,12 +34,6 @@ const WhatsApp = ({ className }: { className?: string }) => (
 
 export default function BebeSitterLanding() {
   // Formulário funcional e validação
-  interface FormType {
-    nome: string;
-    email: string;
-    telefone: string;
-    consent: boolean;
-  }
   interface ErrorsType {
     nome?: string;
     email?: string;
@@ -53,6 +48,9 @@ export default function BebeSitterLanding() {
   const consentRef = useRef<HTMLInputElement>(null);
   const [errors, setErrors] = useState<ErrorsType>({});
   const [submitting, setSubmitting] = useState(false);
+  const [formStatus, setFormStatus] = useState<
+    "idle" | "sending" | "success" | "error"
+  >("idle");
 
   function validateUncontrolled({
     nome,
@@ -86,7 +84,7 @@ export default function BebeSitterLanding() {
     return errors;
   }
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const nome = nomeRef.current?.value || "";
     const email = emailRef.current?.value || "";
@@ -96,12 +94,31 @@ export default function BebeSitterLanding() {
     setErrors(val);
     if (Object.keys(val).length === 0) {
       setSubmitting(true);
-      setTimeout(() => {
-        // Simula envio
-        console.log("Formulário enviado:", { nome, email, telefone, consent });
+      setFormStatus("sending");
+      // Produção: mova estes IDs para variáveis de ambiente (.env.local)
+      const SERVICE_ID = "service_ey81dlo";
+      const TEMPLATE_ID = "template_ltkp4sr";
+      const PUBLIC_KEY = "0iORqeR7J_GxuaDIY";
+      const templateParams = {
+        from_name: nome,
+        from_email: email,
+        phone: telefone,
+        consent: consent ? "Aceito" : "Não aceito",
+      };
+      try {
+        await emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams, PUBLIC_KEY);
+        setFormStatus("success");
+        if (nomeRef.current) nomeRef.current.value = "";
+        if (emailRef.current) emailRef.current.value = "";
+        if (telefoneRef.current) telefoneRef.current.value = "";
+        if (consentRef.current) consentRef.current.checked = false;
+      } catch (error) {
+        console.error("Erro ao enviar via EmailJS", error);
+        setFormStatus("error");
+      } finally {
         setSubmitting(false);
-        alert("Dados enviados! Veja o console.");
-      }, 800);
+        setTimeout(() => setFormStatus("idle"), 4000);
+      }
     }
   }
 
@@ -1629,7 +1646,7 @@ export default function BebeSitterLanding() {
                   <input
                     type="tel"
                     inputMode="numeric"
-                    placeholder="(11) 99999-9999"
+                    placeholder="(99) 99999-9999"
                     className={`w-full px-6 py-4 bg-white/20 border-2 border-white/30 rounded-2xl text-white placeholder-white/60 text-lg backdrop-blur-sm focus:border-yellow-400 focus:bg-white/30 focus:outline-none focus:ring-4 focus:ring-yellow-400/30 hover:border-white/50 hover:bg-white/25 transition-all duration-300 ${
                       errors.telefone ? "border-red-400" : ""
                     }`}
@@ -1688,6 +1705,25 @@ export default function BebeSitterLanding() {
                     🔒 Seus dados estão seguros conosco e não serão
                     compartilhados com terceiros
                   </p>
+                  {formStatus !== "idle" && (
+                    <div className="mt-4 text-sm font-medium">
+                      {formStatus === "sending" && (
+                        <span className="text-blue-200 animate-pulse">
+                          Enviando...
+                        </span>
+                      )}
+                      {formStatus === "success" && (
+                        <span className="text-green-300">
+                          Enviado com sucesso!
+                        </span>
+                      )}
+                      {formStatus === "error" && (
+                        <span className="text-red-300">
+                          Erro ao enviar. Tente novamente.
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </div>
               </form>
               {/* Informações de contato alternativas */}
@@ -1703,14 +1739,14 @@ export default function BebeSitterLanding() {
                         icon: (
                           <Mail className="w-5 h-5 text-yellow-300 inline" />
                         ),
-                        text: "contato@bebesitter.com.br",
+                        text: "bebesitterbrasil@gmail.com",
                         type: "email",
                       },
                       {
                         icon: (
                           <WhatsApp className="w-5 h-5 text-green-500 inline" />
                         ),
-                        text: "(11) 99999-9999",
+                        text: "(71) 98318-1133",
                         type: "phone",
                       },
                     ].map((contact, index) => (
@@ -1937,7 +1973,7 @@ export default function BebeSitterLanding() {
           <div className="mt-12">
             <div className="inline-flex items-center gap-4 bg-gradient-to-r from-red-600 to-red-700 px-8 py-4 rounded-full font-bold text-xl shadow-2xl">
               {/* <span className="w-4 h-4 bg-yellow-400 rounded-full animate-ping"></span> */}
-              ⏰ Restam apenas 23 vagas disponíveis!
+              ⏰ Últimas vagas disponíveis!
               {/* <span className="w-4 h-4 bg-yellow-400 rounded-full animate-ping"></span> */}
             </div>
           </div>
@@ -2133,8 +2169,8 @@ export default function BebeSitterLanding() {
                 </div>
 
                 <div className="text-sm text-gray-400">
-                  <p>📧 Contato: contato@bebesitter.com.br</p>
-                  <p>📱 WhatsApp: (11) 99999-9999</p>
+                  <p>📧 Contato: bebesitterbrasil@gmail.com</p>
+                  <p>📱 WhatsApp: (71) 98318-1133</p>
                 </div>
               </div>
             </div>
