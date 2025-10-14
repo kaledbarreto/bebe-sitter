@@ -293,7 +293,8 @@ export default function BebeSitterLanding() {
   }
 
   // No topo do componente (exato local após hooks, antes do return):
-  const CTA_LINK = "https://www.google.com";
+  const CTA_LINK =
+    "https://chat.whatsapp.com/JspuEE7kxMV6aMS3LedY7R?mode=ems_wa_t";
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
