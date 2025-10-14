@@ -624,12 +624,17 @@ export default function BebeSitterLanding() {
           </div>
 
           {/* CTA de transição */}
-          <div className="mt-16 cursor-pointer">
-            <div className="inline-flex items-center gap-4 bg-gradient-to-r from-green-400 to-blue-400 text-white px-8 py-4 rounded-full font-bold text-xl shadow-2xl hover:scale-105 transition-all duration-300">
+          <div className="mt-16">
+            <a
+              href={CTA_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-4 bg-gradient-to-r from-green-400 to-blue-400 text-white px-8 py-4 rounded-full font-bold text-xl shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer"
+            >
               <CheckCircle className="w-8 h-8" />
               A SOLUÇÃO EXISTE E ESTÁ AQUI!
               <ArrowRight className="w-8 h-8" />
-            </div>
+            </a>
           </div>
         </div>
       </section>
